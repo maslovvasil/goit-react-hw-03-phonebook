@@ -17,6 +17,24 @@ export class App extends Component {
     filter: '',
   };
 
+  //При добавлении и удалении контакта, контакты сохраняются в локальное хранилище.
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  //При загрузке приложения, контакты, если таковые есть, считываются из локального хранилища и записываются в состояние.
+
+  componentDidMount() {
+    const newContacts = JSON.parse(localStorage.getItem('contacts'));
+
+    if (newContacts) {
+      this.setState({ contacts: newContacts });
+    }
+  }
+
   formSubmitHandler = ({ name, number }) => {
     const { contacts } = this.state;
     const id = nanoid(5);
